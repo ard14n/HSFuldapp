@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.abmedia.hsfuldapp.Grades;
@@ -34,6 +35,14 @@ import java.util.regex.Pattern;
  */
 public class GradesFragment extends Fragment implements View.OnClickListener {
 
+    EditText username_edit;
+    EditText password_edit;
+
+    TextView text;
+
+    String username;
+    String password;
+
     private OnFragmentInteractionListener mListener;
 
     public GradesFragment() {
@@ -53,15 +62,23 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_grades, container, false);
+
         Button btn = (Button) v.findViewById(R.id.button);
         btn.setOnClickListener(this);
         return v;
+
+
+
+
+
     }
 
     public void onButtonPressed(Uri uri) {
@@ -89,13 +106,23 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        TextView test = (TextView) getView().findViewById(R.id.text);
+        text = (TextView) getView().findViewById(R.id.text);
 
-        Grades testgrade = new Grades("test","test");
+        username_edit = (EditText) getView().findViewById(R.id.username_field);
+        password_edit = (EditText) getView().findViewById(R.id.password_field);
 
-        String asiCode = testgrade.login();
+        String uservalue = username_edit.getText().toString().trim();
+        String passvalue = password_edit.getText().toString().trim();
 
-        new LoginGrades().execute();
+        if ( uservalue.equals("") && passvalue.equals("")) {
+
+            text.setText("Bitte geben Sie die korrekten Daten ein");
+
+        } else {
+            new LoginGrades().execute(uservalue, passvalue);
+        }
+
+
     }
 
     /**
@@ -113,15 +140,7 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void onBtnClick(View v){
-        TextView test = (TextView) getView().findViewById(R.id.text);
 
-        Grades testgrade = new Grades("test","test");
-
-        String asiCode = testgrade.login();
-
-        new LoginGrades().execute();
-    }
 
     private class LoginGrades extends AsyncTask<String, Void, Void> {
 
@@ -134,9 +153,9 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
         @Override
         protected Void doInBackground(String... params) {
 
-            //NUTZERNAME UND PASSWORT EINGEBEN FÜR TEST
-            String username = "";
-            String password = "";
+
+            String uservalue = params[0];
+            String passvalue = params[1];
 
             try{
 
@@ -147,7 +166,7 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
                 //DOM-Objekt erzeugen nach Anfrage in Qispos mit Credentials
                 Document docs = Jsoup.connect(login_url)
-                        .data("asdf", username,"fdsa",password,"submit", "Anmelden")
+                        .data("asdf", uservalue,"fdsa",passvalue,"submit", "Anmelden")
                         .referrer(referer)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
                         .post();
@@ -181,8 +200,8 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
             super.onPostExecute(aVoid);
 
             Context context = getActivity();
-            TextView test =  (TextView) getView().findViewById(R.id.text);
-            test.setText(asi);
+            text =  (TextView) getView().findViewById(R.id.text);
+            text.setText(title);
 
         }
     }
