@@ -58,8 +58,6 @@ public class Grades {
 
     }
 
-
-
     private void logout(){
 
     }
@@ -73,6 +71,13 @@ public class Grades {
 
         ArrayList<String> arrayStrings = new ArrayList<String>();
         return arrayStrings;
+    }
+
+    private ArrayList<String> saveGrades(ArrayList<String> grades){
+
+        ArrayList<String> grades_intern = new ArrayList<String>();
+
+        return grades;
     }
 
     private ArrayList<String> orderGrades(ArrayList<String> grades){

@@ -4,33 +4,28 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity {
+public class GradesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_grades);
 
         TextView test = (TextView) findViewById(R.id.text);
 
         Grades testgrade = new Grades("test","test");
 
         String asiCode = testgrade.login();
-
-
 
         new LoginGrades().execute();
 
@@ -48,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... params) {
 
-            //Parameter der vorher erfolgten Benutzereingabe
+            //NUTZERNAME UND PASSWORT EINGEBEN FÜR TEST
             String username = "";
             String password = "";
 
