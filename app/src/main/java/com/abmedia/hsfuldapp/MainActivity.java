@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import com.abmedia.hsfuldapp.frag.GradesFragment;
 import com.abmedia.hsfuldapp.frag.HomeFragment;
 import com.abmedia.hsfuldapp.frag.MensaFragment;
-import com.abmedia.hsfuldapp.R;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
         GradesFragment.OnFragmentInteractionListener, MensaFragment.OnFragmentInteractionListener {
