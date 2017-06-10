@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.abmedia.hsfuldapp.R;
 
@@ -24,34 +25,47 @@ public class MensaFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private String[] food = {
-            "Nudeln",
-            "Dönerteller",
-            "Pizza",
-            "Schnitzel",
-            "Salat",
-            "Nudeln",
-            "Dönerteller",
-            "Pizza",
-            "Schnitzel",
-            "Salat",
-            "Nudeln",
-            "Dönerteller",
-            "Pizza",
-            "Schnitzel",
-            "Salat",
-            "Nudeln",
-            "Dönerteller",
-            "Pizza",
-            "Schnitzel",
-            "Salat",
-            "Nudeln",
-            "Dönerteller",
-            "Pizza",
-            "Schnitzel",
-            "Salat"
+    private static class Food {
+        String name, description, price;
+
+        public Food(String name, String description, String price){
+            this.name = name;
+            this.description = description;
+            this.price = price;
+        }
+    }
+    private static class ViewHolder{
+        TextView foodName;
+        TextView foodDescription;
+        TextView foodPrice;
+    }
+
+    private Food[] menu = {
+            new Food("Nudeln", "mit Tomatensauce", "4,20€"),
+            new Food("Dönerteller", "mit Knoblauchsauce", "3,33€"),
+            new Food("Pizza", "Margherita", "2,40€"),
+            new Food("Schnitzel", "mit Pommes und Beilage nach Wahl", "2,22€"),
+            new Food("Salat", "Zwirbelsten", "1,87€"),
+            new Food("Nudeln", "mit Tomatensauce", "4,20€"),
+            new Food("Dönerteller", "mit Knoblauchsauce", "3,33€"),
+            new Food("Pizza", "Margherita", "2,40€"),
+            new Food("Schnitzel", "mit Pommes und Beilage nach Wahl", "2,22€"),
+            new Food("Salat", "Zwirbelsten", "1,87€"),
+            new Food("Nudeln", "mit Tomatensauce", "4,20€"),
+            new Food("Dönerteller", "mit Knoblauchsauce", "3,33€"),
+            new Food("Pizza", "Margherita", "2,40€"),
+            new Food("Schnitzel", "mit Pommes und Beilage nach Wahl", "2,22€"),
+            new Food("Salat", "Zwirbelsten", "1,87€"),
+            new Food("Nudeln", "mit Tomatensauce", "4,20€"),
+            new Food("Dönerteller", "mit Knoblauchsauce", "3,33€"),
+            new Food("Pizza", "Margherita", "2,40€"),
+            new Food("Schnitzel", "mit Pommes und Beilage nach Wahl", "2,22€"),
+            new Food("Salat", "Zwirbelsten", "1,87€")
     };
-    private ArrayAdapter<String> cheeseAdapter;
+
+
+
+
 
     public MensaFragment() {
         // Required empty public constructor
@@ -81,8 +95,38 @@ public class MensaFragment extends Fragment {
         ViewGroup v = (ViewGroup) inflater.inflate(R.layout.mensa_item, container, false);
         Context c = getActivity();
         ListView cheeseList = new ListView(c);
-        cheeseAdapter =
-                new ArrayAdapter<String>(c, R.layout.mensa_item, R.id.food_name, food);
+
+        ArrayAdapter<Food> cheeseAdapter = new ArrayAdapter<Food>(c, 0, menu){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                Food currentFood = menu[position];
+                if(convertView == null) {
+                    convertView = getActivity().getLayoutInflater().inflate(R.layout.mensa_item, null, false);
+                }
+                ViewHolder viewHolder = new ViewHolder();
+                viewHolder.foodName =
+                        (TextView)convertView.findViewById(R.id.food_name);
+                viewHolder.foodDescription =
+                        (TextView)convertView.findViewById(R.id.food_description);
+                viewHolder.foodPrice =
+                        (TextView)convertView.findViewById(R.id.food_price);
+
+                convertView.setTag(viewHolder);
+
+                TextView foodName =
+                        ((ViewHolder)convertView.getTag()).foodName;
+                TextView foodDescription =
+                        ((ViewHolder)convertView.getTag()).foodDescription;
+                TextView foodPrice =
+                        ((ViewHolder)convertView.getTag()).foodPrice;
+
+                foodName.setText(currentFood.name);
+                foodDescription.setText(currentFood.description);
+                foodPrice.setText(currentFood.price);
+                return convertView;
+            }
+
+        };
 
         cheeseList.setAdapter(cheeseAdapter);
         v.addView(cheeseList);
