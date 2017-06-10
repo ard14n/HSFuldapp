@@ -4,9 +4,11 @@ import android.os.AsyncTask;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /*
@@ -22,7 +24,10 @@ public class Grades {
     private String username;
     private String password;
 
-    private String useragent = "";
+    private String login_url = "https://qispos.hs-fulda.de/qisserver/rds?state=user&type=1&category=auth.login&startpage=portal.vm&breadCrumbSource=portal";
+    private String referer = "https://qispos.hs-fulda.de/qisserver/rds?state=user&type=0";
+
+    private String useragent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
 
 
     public Grades(){
@@ -45,25 +50,15 @@ public class Grades {
 
     }
 
-    private void login(){
 
-        String postfields;
 
-        try {
-            Document doc = Jsoup.connect("http://test.com")
-                    .data("query", "Java")
-                    .userAgent(this.useragent)
-                    .cookie("auth", "token")
-                    .timeout(3000)
-                    .post();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected String login(){
 
-        
-
+        return "Execute";
 
     }
+
+
 
     private void logout(){
 
