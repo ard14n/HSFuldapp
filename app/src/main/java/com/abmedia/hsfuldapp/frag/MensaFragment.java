@@ -1,7 +1,9 @@
 package com.abmedia.hsfuldapp.frag;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +15,10 @@ import android.widget.TextView;
 
 import com.abmedia.hsfuldapp.R;
 
+import org.jsoup.Jsoup;
+
+import java.io.IOException;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -23,6 +29,10 @@ import com.abmedia.hsfuldapp.R;
  */
 public class MensaFragment extends Fragment {
 
+    private ProgressDialog pDialog;
+    private String inboxJson;
+    private String myJSON;
+    private static String url;
     private OnFragmentInteractionListener mListener;
 
     private static class Food {
@@ -41,35 +51,16 @@ public class MensaFragment extends Fragment {
     }
 
     private Food[] menu = {
-            new Food("Nudeln", "mit Tomatensauce", "4,20€"),
-            new Food("Dönerteller", "mit Knoblauchsauce", "3,33€"),
-            new Food("Pizza", "Margherita", "2,40€"),
-            new Food("Schnitzel", "mit Pommes und Beilage nach Wahl", "2,22€"),
-            new Food("Salat", "Zwirbelsten", "1,87€"),
-            new Food("Nudeln", "mit Tomatensauce", "4,20€"),
-            new Food("Dönerteller", "mit Knoblauchsauce", "3,33€"),
-            new Food("Pizza", "Margherita", "2,40€"),
-            new Food("Schnitzel", "mit Pommes und Beilage nach Wahl", "2,22€"),
-            new Food("Salat", "Zwirbelsten", "1,87€"),
-            new Food("Nudeln", "mit Tomatensauce", "4,20€"),
-            new Food("Dönerteller", "mit Knoblauchsauce", "3,33€"),
-            new Food("Pizza", "Margherita", "2,40€"),
-            new Food("Schnitzel", "mit Pommes und Beilage nach Wahl", "2,22€"),
-            new Food("Salat", "Zwirbelsten", "1,87€"),
-            new Food("Nudeln", "mit Tomatensauce", "4,20€"),
-            new Food("Dönerteller", "mit Knoblauchsauce", "3,33€"),
-            new Food("Pizza", "Margherita", "2,40€"),
-            new Food("Schnitzel", "mit Pommes und Beilage nach Wahl", "2,22€"),
-            new Food("Salat", "Zwirbelsten", "1,87€")
+            new Food("Nudeln", "mit Tomatensauce", "4,20€")
     };
-
-
 
 
 
     public MensaFragment() {
         // Required empty public constructor
     }
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -87,7 +78,47 @@ public class MensaFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
+
+        new GetDataJSON().execute();
     }
+
+    private class GetDataJSON extends AsyncTask<Void, Void, Void>{
+
+        @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... arg0){
+
+                try {
+                    inboxJson = Jsoup.connect("http://91.205.173.172/android/mensa/mensa.php")
+                            .timeout(1000000)
+                            .header("Accept", "text/javascript")
+                            .userAgent("Mozilla/5.0 (Windows NT 6.1; rv:40.0) Gecko/20100101 Firefox/40.0")
+                            .get()
+                            .body()
+                            .text();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            protected void onPostExecute(String stream){
+
+
+
+            }
+    }
+
+
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
