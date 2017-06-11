@@ -4,13 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.abmedia.hsfuldapp.Grades;
@@ -26,6 +30,8 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,11 +54,15 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
     String username;
     String password;
 
+
+
     private OnFragmentInteractionListener mListener;
+
 
     public GradesFragment() {
         // Required empty public constructor
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -68,17 +78,19 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_grades, container, false);
+        View v = (View) inflater.inflate(R.layout.fragment_grades, container, false);
 
         Button btn = (Button) v.findViewById(R.id.button);
         btn.setOnClickListener(this);
+
+
         return v;
+
 
 
 
@@ -177,6 +189,7 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
 
 
+
                 //TODO Fehlermanagement vervollständigen
                 //TODO Bedingung für nicht erfolgreiche Anmeldung hinzufügen
                 //TODO Bei erfolgreicher Anmeldung zur nächsten Activity wechseln
@@ -186,13 +199,12 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
                 Connection.Response res = Jsoup.connect(URLDecoder.decode(login_url, "utf-8"))
                         .data("asdf", uservalue,"fdsa",passvalue,"submit", "Anmelden")
                         .referrer(referer)
-                        .cookies(ck.cookies())
                         .userAgent(userAgent)
                         .method(Connection.Method.POST)
                         .execute();
 
 
-
+                String cookie = res.cookie("JSESSIONID");
                 Document docs = res.parse();
 
 
@@ -211,7 +223,7 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
                  res = Jsoup.connect(URLDecoder.decode("https://qispos.hs-fulda.de/qisserver/rds?state=notenspiegelStudent&next=list.vm&nextdir=qispos/notenspiegel/student&createInfos=Y&struct=auswahlBaum&nodeID=auswahlBaum%7Cabschluss%3Aabschl%3D84%2Cstgnr%3D1&expand=0&asi=" + asi + "#auswahlBaum%7Cabschluss%3Aabschl%3D84%2Cstgnr%3D1", "utf-8"))
                          .referrer(referer_noten)
-                         .cookies(ck.cookies())
+                         .cookie("JSESSIONID", cookie)
                          .userAgent(userAgent)
                          .header("Host", "qispos.hs-fulda.de")
                          .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
@@ -225,7 +237,27 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
                 Document d = res.parse();
 
+                Element notentable = d.select("table[border=0]").get(1);
+
+                Elements notenrow = notentable.select("tr");
+
+                for (int i = 3; i < notenrow.size()-1; i++){
+
+                    Element eintrag = notenrow.get(i);
+
+                    Elements spalten = eintrag.select("td");
+
+                    title += spalten.text() + "\n";
+
+
+
+                }
+
+
+
                 System.out.println(d.body().text());
+                System.out.println(cookie);
+                System.out.println(asi);
 
             }catch(IOException e){
                 e.printStackTrace();
