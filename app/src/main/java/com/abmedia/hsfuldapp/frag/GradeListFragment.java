@@ -31,9 +31,10 @@ public class GradeListFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private static class Grade {
-        private String pruefung, status, versuch, credits, note;
+        private String datum, pruefung, status, versuch, credits, note;
 
-        public Grade(String pruefung, String status, String versuch, String credits, String note){
+        public Grade(String datum, String pruefung, String status, String versuch, String credits, String note){
+            this.datum = datum;
             this.pruefung = pruefung;
             this.status = status;
             this.versuch = versuch;
@@ -43,6 +44,7 @@ public class GradeListFragment extends Fragment {
     }
 
     private static class ViewHolder{
+        TextView gradeDatum;
         TextView gradePruef;
         TextView gradeStatus;
         TextView gradeVersuch;
@@ -68,6 +70,8 @@ public class GradeListFragment extends Fragment {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.grades_item, null, false);
             }
             ViewHolder viewHolder = new ViewHolder();
+            viewHolder.gradeDatum =
+                    (TextView)convertView.findViewById(R.id.grades_datum);
             viewHolder.gradePruef =
                     (TextView)convertView.findViewById(R.id.grades_pruefung);
             viewHolder.gradeStatus =
@@ -81,6 +85,8 @@ public class GradeListFragment extends Fragment {
 
             convertView.setTag(viewHolder);
 
+            TextView gradeDatum =
+                    ((ViewHolder)convertView.getTag()).gradeDatum;
             TextView gradePruef =
                     ((ViewHolder)convertView.getTag()).gradePruef;
             TextView gradeStatus =
@@ -92,6 +98,7 @@ public class GradeListFragment extends Fragment {
             TextView gradeNote =
                     ((ViewHolder)convertView.getTag()).gradeNote;
 
+            gradeDatum.setText(currentFood.datum);
             gradePruef.setText(currentFood.pruefung);
             gradeStatus.setText(currentFood.status);
             gradeVersuch.setText(currentFood.versuch);
