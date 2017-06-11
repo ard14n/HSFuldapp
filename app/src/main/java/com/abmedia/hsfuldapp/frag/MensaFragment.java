@@ -143,8 +143,6 @@ public class MensaFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         myListView = new ListView(getActivity());
 
         menu = new ArrayList<>();
@@ -182,22 +180,21 @@ public class MensaFragment extends Fragment {
 
 
                 for (int i = 0; i < array.length(); i++){
+
                     JSONObject obj = array.getJSONObject(i);
-
-
 
                     JSONObject obj2 = obj.getJSONObject("gericht");
 
-                    String gerichtsname = obj2.getString("gerichtsname");
+                    String name = obj2.getString("gerichtsname");
                     String datum = obj2.getString("datum");
-                    String gerichtsbeschreibung = obj2.getString("gerichtsbeschreibung");
+                    String beschreibung = obj2.getString("gerichtsbeschreibung");
                     String bild = obj2.getString("bild");
                     String kategorie = obj2.getString("kategorie");
                     String preis = obj2.getString("preis");
 
-                    System.out.println(gerichtsbeschreibung);
+                    System.out.println(preis);
 
-                    menu.add(new Food(gerichtsname, gerichtsbeschreibung, preis));
+                    menu.add(new Food(kategorie, name, beschreibung, "", preis));
 
                 }
 
@@ -219,10 +216,6 @@ public class MensaFragment extends Fragment {
 
         }
     }
-
-
-
-
 
 
     @Override
