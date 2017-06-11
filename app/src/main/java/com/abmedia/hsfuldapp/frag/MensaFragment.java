@@ -2,6 +2,8 @@ package com.abmedia.hsfuldapp.frag;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
@@ -27,7 +29,10 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,13 +55,14 @@ public class MensaFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private static class Food {
-        String category, name, description, price, photoUri;
+        String category, name, description, price;
+        Bitmap photo;
 
-        public Food(String category, String name, String description, String price, String photoUri){
+        public Food(String category, String name, String description, String price, Bitmap photo){
             this.category = category;
             this.name = name;
             this.description = description;
-            this.photoUri = photoUri;
+            this.photo = photo;
             this.price = price;
         }
     }
@@ -66,6 +72,22 @@ public class MensaFragment extends Fragment {
         TextView foodDescription;
         ImageView foodPhoto;
         TextView foodPrice;
+    }
+
+    public Bitmap getbmpfromURL(String surl){
+        try {
+            URL url = new URL(surl);
+            HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
+            urlcon.setDoInput(true);
+            urlcon.connect();
+            InputStream in = urlcon.getInputStream();
+            Bitmap mIcon = BitmapFactory.decodeStream(in);
+            return  mIcon;
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -109,7 +131,7 @@ public class MensaFragment extends Fragment {
             foodCategory.setText(currentFood.category);
             foodName.setText(currentFood.name);
             foodDescription.setText(currentFood.description);
-            foodPhoto.setImageURI(Uri.parse(currentFood.photoUri));
+            foodPhoto.setImageBitmap(currentFood.photo);
             foodPrice.setText(currentFood.price);
             return convertView;
         }
@@ -175,9 +197,7 @@ public class MensaFragment extends Fragment {
 
             try {
 
-
                 JSONArray array = new JSONArray(inboxJson);
-
 
                 for (int i = 0; i < array.length(); i++){
 
@@ -194,7 +214,9 @@ public class MensaFragment extends Fragment {
 
                     System.out.println(preis);
 
-                    menu.add(new Food(kategorie, name, beschreibung, "", preis));
+                    Bitmap photo = getbmpfromURL(bild);
+
+                    menu.add(new Food(kategorie, name, beschreibung, preis, photo));
 
                 }
 
