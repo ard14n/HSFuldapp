@@ -48,7 +48,7 @@ public class MensaFragment extends Fragment {
     private static class Food {
         String name, description, price;
 
-        public Food(String name){
+        public Food(String name, String description, String price){
             this.name = name;
             this.description = description;
             this.price = price;
@@ -173,10 +173,11 @@ public class MensaFragment extends Fragment {
                     String gerichtsbeschreibung = obj2.getString("gerichtsbeschreibung");
                     String bild = obj2.getString("bild");
                     String kategorie = obj2.getString("kategorie");
+                    String preis = obj2.getString("preis");
 
-                    //System.out.println(result);
+                    System.out.println(gerichtsbeschreibung);
 
-                    menu.add(new Food(gerichtsname));
+                    menu.add(new Food(gerichtsname, gerichtsbeschreibung, preis));
 
                 }
 
@@ -193,13 +194,7 @@ public class MensaFragment extends Fragment {
 
         protected void onPostExecute(String result){
 
-
-
-
-
-
             adapter.notifyDataSetChanged();
-
 
         }
     }
