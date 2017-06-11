@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,16 @@ import android.widget.TextView;
 
 import com.abmedia.hsfuldapp.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -148,14 +154,50 @@ public class MensaFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println(inboxJson);
-            Food item = new Food(inboxJson.substring(191, 191+46));
-            menu.add(item);
+
+            try {
+
+
+                JSONArray array = new JSONArray(inboxJson);
+
+
+                for (int i = 0; i < array.length(); i++){
+                    JSONObject obj = array.getJSONObject(i);
+
+
+
+                    JSONObject obj2 = obj.getJSONObject("gericht");
+
+                    String gerichtsname = obj2.getString("gerichtsname");
+                    String datum = obj2.getString("datum");
+                    String gerichtsbeschreibung = obj2.getString("gerichtsbeschreibung");
+                    String bild = obj2.getString("bild");
+                    String kategorie = obj2.getString("kategorie");
+
+                    //System.out.println(result);
+
+                    menu.add(new Food(gerichtsname));
+
+                }
+
+
+
+            } catch (JSONException e) {
+                Log.e(TAG, "" + e);
+            }
+
+
             return null;
         }
 
 
         protected void onPostExecute(String result){
+
+
+
+
+
+
             adapter.notifyDataSetChanged();
 
 
