@@ -2,6 +2,8 @@ package com.abmedia.hsfuldapp.frag;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ import com.abmedia.hsfuldapp.R;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,17 +44,21 @@ public class MensaFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private static class Food {
-        String name, description, price;
+        String category, name, description, price, photoUri;
 
-        public Food(String name){
+        public Food(String category, String name, String description, String price, String photoUri){
+            this.category = category;
             this.name = name;
             this.description = description;
+            this.photoUri = photoUri;
             this.price = price;
         }
     }
     private static class ViewHolder{
+        TextView foodCategory;
         TextView foodName;
         TextView foodDescription;
+        ImageView foodPhoto;
         TextView foodPrice;
     }
 
@@ -68,23 +76,35 @@ public class MensaFragment extends Fragment {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.mensa_item, null, false);
             }
             ViewHolder viewHolder = new ViewHolder();
+            viewHolder.foodCategory =
+                    (TextView)convertView.findViewById(R.id.food_category);
             viewHolder.foodName =
                     (TextView)convertView.findViewById(R.id.food_name);
             viewHolder.foodDescription =
                     (TextView)convertView.findViewById(R.id.food_description);
+            viewHolder.foodPhoto =
+                    (ImageView)convertView.findViewById(R.id.food_photo);
             viewHolder.foodPrice =
                     (TextView)convertView.findViewById(R.id.food_price);
 
             convertView.setTag(viewHolder);
 
+            TextView foodCategory =
+                    ((ViewHolder)convertView.getTag()).foodCategory;
             TextView foodName =
                     ((ViewHolder)convertView.getTag()).foodName;
             TextView foodDescription =
                     ((ViewHolder)convertView.getTag()).foodDescription;
+            ImageView foodPhoto =
+                    ((ViewHolder)convertView.getTag()).foodPhoto;
             TextView foodPrice =
                     ((ViewHolder)convertView.getTag()).foodPrice;
 
+            foodCategory.setText(currentFood.category);
             foodName.setText(currentFood.name);
+            foodDescription.setText(currentFood.description);
+            foodPhoto.setImageURI(Uri.parse(currentFood.photoUri));
+            foodPrice.setText(currentFood.price);
             return convertView;
         }
     }
@@ -149,8 +169,15 @@ public class MensaFragment extends Fragment {
                 e.printStackTrace();
             }
             System.out.println(inboxJson);
-            Food item = new Food(inboxJson.substring(191, 191+46));
+
+            // test items
+            //TODO Bild wird nicht angezeigt wenn es von einer URI kommt
+            Food item = new Food("Hauptspeise", "Rahmgeschnetzeltes vom Schwein mit Champignons", "mit Beilage nach Wahl", "3,20€", "http://www.maxmanager.de/daten-extern/sw-giessen/html/fotos/s275837e1_10.jpg");
+            Food item2 = new Food("Hauptspeise", "Rahmgeschnetzeltes vom Schwein mit Champignons", "mit Beilage nach Wahl", "3,20€", "http://www.maxmanager.de/daten-extern/sw-giessen/html/fotos/s275837e1_10.jpg");
+            Food item3 = new Food("Hauptspeise", "Rahmgeschnetzeltes vom Schwein mit Champignons", "mit Beilage nach Wahl", "3,20€", "http://www.maxmanager.de/daten-extern/sw-giessen/html/fotos/s275837e1_10.jpg");
             menu.add(item);
+            menu.add(item2);
+            menu.add(item3);
             return null;
         }
 

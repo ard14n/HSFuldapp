@@ -14,4 +14,8 @@
     <string name="noten">Noten</string>
     <string name="mensa">Mensa</string>
     <string name="header">Header</string>
+    <string name="cat">Hauptspeise</string>
+    <string name="fname">Rahmgeschnetzeltes vom Schwein mit Champignons</string>
+    <string name="fdesc">mit Beilage nach Wahl</string>
+    <string name="fprice">3,20€</string>
 </resources>
