@@ -5,6 +5,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,8 @@ import com.abmedia.hsfuldapp.R;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +42,7 @@ public class MensaFragment extends Fragment {
     private static class Food {
         String name, description, price;
 
-        public Food(String name, String description, String price){
+        public Food(String name){
             this.name = name;
             this.description = description;
             this.price = price;
@@ -50,9 +54,45 @@ public class MensaFragment extends Fragment {
         TextView foodPrice;
     }
 
-    private Food[] menu = {
-            new Food("Nudeln", "mit Tomatensauce", "4,20€")
-    };
+
+    private class MyArrayAdapter extends ArrayAdapter{
+
+        public MyArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            Food currentFood = menu.get(position);
+            if(convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.mensa_item, null, false);
+            }
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.foodName =
+                    (TextView)convertView.findViewById(R.id.food_name);
+            viewHolder.foodDescription =
+                    (TextView)convertView.findViewById(R.id.food_description);
+            viewHolder.foodPrice =
+                    (TextView)convertView.findViewById(R.id.food_price);
+
+            convertView.setTag(viewHolder);
+
+            TextView foodName =
+                    ((ViewHolder)convertView.getTag()).foodName;
+            TextView foodDescription =
+                    ((ViewHolder)convertView.getTag()).foodDescription;
+            TextView foodPrice =
+                    ((ViewHolder)convertView.getTag()).foodPrice;
+
+            foodName.setText(currentFood.name);
+            return convertView;
+        }
+    }
+
+
+    private ArrayList<Food> menu;
+    private ListView myListView;
+    private MyArrayAdapter adapter;
 
 
 
@@ -79,40 +119,47 @@ public class MensaFragment extends Fragment {
 
 
 
+        myListView = new ListView(getActivity());
+
+        menu = new ArrayList<>();
+        adapter = new MyArrayAdapter(getActivity(), R.layout.mensa_item, menu);
         new GetDataJSON().execute();
     }
 
-    private class GetDataJSON extends AsyncTask<Void, Void, Void>{
+    private class GetDataJSON extends AsyncTask<Void, Void, String>{
 
         @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
+        protected void onPreExecute() {
+        super.onPreExecute();
 
 
+        }
+
+        @Override
+        protected String doInBackground(Void... arg0) {
+            try {
+                inboxJson = Jsoup.connect("http://91.205.173.172/android/mensa/mensa.php")
+                        .timeout(1000000)
+                        .header("Accept", "text/javascript")
+                        .userAgent("Mozilla/5.0 (Windows NT 6.1; rv:40.0) Gecko/20100101 Firefox/40.0")
+                        .get()
+                        .body()
+                        .text();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            protected Void doInBackground(Void... arg0){
-
-                try {
-                    inboxJson = Jsoup.connect("http://91.205.173.172/android/mensa/mensa.php")
-                            .timeout(1000000)
-                            .header("Accept", "text/javascript")
-                            .userAgent("Mozilla/5.0 (Windows NT 6.1; rv:40.0) Gecko/20100101 Firefox/40.0")
-                            .get()
-                            .body()
-                            .text();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            protected void onPostExecute(String stream){
+            System.out.println(inboxJson);
+            Food item = new Food(inboxJson.substring(191, 191+46));
+            menu.add(item);
+            return null;
+        }
 
 
+        protected void onPostExecute(String result){
+            adapter.notifyDataSetChanged();
 
-            }
+
+        }
     }
 
 
@@ -125,42 +172,10 @@ public class MensaFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup v = (ViewGroup) inflater.inflate(R.layout.mensa_item, container, false);
         Context c = getActivity();
-        ListView cheeseList = new ListView(c);
+        myListView = new ListView(c);
 
-        ArrayAdapter<Food> cheeseAdapter = new ArrayAdapter<Food>(c, 0, menu){
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent){
-                Food currentFood = menu[position];
-                if(convertView == null) {
-                    convertView = getActivity().getLayoutInflater().inflate(R.layout.mensa_item, null, false);
-                }
-                ViewHolder viewHolder = new ViewHolder();
-                viewHolder.foodName =
-                        (TextView)convertView.findViewById(R.id.food_name);
-                viewHolder.foodDescription =
-                        (TextView)convertView.findViewById(R.id.food_description);
-                viewHolder.foodPrice =
-                        (TextView)convertView.findViewById(R.id.food_price);
-
-                convertView.setTag(viewHolder);
-
-                TextView foodName =
-                        ((ViewHolder)convertView.getTag()).foodName;
-                TextView foodDescription =
-                        ((ViewHolder)convertView.getTag()).foodDescription;
-                TextView foodPrice =
-                        ((ViewHolder)convertView.getTag()).foodPrice;
-
-                foodName.setText(currentFood.name);
-                foodDescription.setText(currentFood.description);
-                foodPrice.setText(currentFood.price);
-                return convertView;
-            }
-
-        };
-
-        cheeseList.setAdapter(cheeseAdapter);
-        v.addView(cheeseList);
+        myListView.setAdapter(adapter);
+        v.addView(myListView);
         return v;
     }
 
@@ -169,6 +184,7 @@ public class MensaFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
 
     @Override
     public void onAttach(Context context) {
