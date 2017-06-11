@@ -18,4 +18,9 @@
     <string name="fname">Rahmgeschnetzeltes vom Schwein mit Champignons</string>
     <string name="fdesc">mit Beilage nach Wahl</string>
     <string name="fprice">3,20€ / 3,20€ / 3,20€</string>
+    <string name="pruefung">Modulprüfung: Gestaltungsgrundlagen und Medienwerkzeuge</string>
+    <string name="note">1,7</string>
+    <string name="versuch">1. Versuch</string>
+    <string name="credits">10 Credits</string>
+    <string name="bestanden">bestanden</string>
 </resources>
