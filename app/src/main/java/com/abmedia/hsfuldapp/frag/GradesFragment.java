@@ -16,12 +16,17 @@ import android.widget.TextView;
 import com.abmedia.hsfuldapp.Grades;
 import com.abmedia.hsfuldapp.R;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -114,12 +119,17 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
         String uservalue = username_edit.getText().toString().trim();
         String passvalue = password_edit.getText().toString().trim();
 
+        Boolean isLoggedIn = false;
+
         if ( uservalue.equals("") && passvalue.equals("")) {
 
             text.setText("Bitte geben Sie die korrekten Daten ein");
 
-        } else {
+        } else if ( isLoggedIn == false ) {
+
             new LoginGrades().execute(uservalue, passvalue);
+            isLoggedIn = true;
+
         }
 
 
@@ -147,7 +157,11 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
         String login_url = "https://qispos.hs-fulda.de/qisserver/rds?state=user&type=1&category=auth.login&startpage=portal.vm&breadCrumbSource=portal";
         String referer = "https://qispos.hs-fulda.de/qisserver/rds?state=user&type=0";
 
+        String noten_url = "https://qispos.hs-fulda.de/qisserver/rds?state=notenspiegelStudent&next=list.vm&nextdir=qispos/notenspiegel/student&createInfos=Y&struct=auswahlBaum&nodeID=auswahlBaum%7Cabschluss%3Aabschl%3D84%2Cstgnr%3D1&expand=0&asi=" + asi + "#auswahlBaum%7Cabschluss%3Aabschl%3D84%2Cstgnr%3D1";
+        String referer_noten = "https://qispos .hs-fulda.de/qisserver/rds?state=notenspiegelStudent&next=tree.vm&nextdir=qispos/notenspiegel/student&navigationPosition=functions,notenspiegelStudent&breadcrumb=notenspiegel&topitem=functions&subitem=notenspiegelStudent&asi=" + asi;
+        String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36";
 
+        Map<String, String> cookie;
 
         @Override
         protected Void doInBackground(String... params) {
@@ -157,6 +171,11 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
             String passvalue = params[1];
 
             try{
+                Connection.Response ck = Jsoup.connect(URLDecoder.decode(login_url, "utf-8"))
+                        .method(Connection.Method.GET)
+                        .execute();
+
+
 
                 //TODO Fehlermanagement vervollständigen
                 //TODO Bedingung für nicht erfolgreiche Anmeldung hinzufügen
@@ -164,15 +183,18 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
                 //TODO Cookiemanagement zur Erhaltung der Session hinzufügen (JSESSIONID)
 
                 //DOM-Objekt erzeugen nach Anfrage in Qispos mit Credentials
-                Document docs = Jsoup.connect(login_url)
+                Connection.Response res = Jsoup.connect(URLDecoder.decode(login_url, "utf-8"))
                         .data("asdf", uservalue,"fdsa",passvalue,"submit", "Anmelden")
                         .referrer(referer)
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
-                        .post();
+                        .cookies(ck.cookies())
+                        .userAgent(userAgent)
+                        .method(Connection.Method.POST)
+                        .execute();
 
 
-                Element f = docs.select("div[class=divloginstatus]").first();
-                title = f.text();
+
+                Document docs = res.parse();
+
 
                 //QISPOS DOM-Traversing und Regex-Extrahierung für asi-code
                 //TODO Regex für ASI noch weiter spezifiern um mögliche Fehler zu verhindern
@@ -181,14 +203,35 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
                 Pattern p = Pattern.compile("(?<=asi=).*");
                 Matcher m = p.matcher(asi_href);
+
                 if (m.find()) {
                     asi = m.group(0);
                 }
 
 
+                 res = Jsoup.connect(URLDecoder.decode("https://qispos.hs-fulda.de/qisserver/rds?state=notenspiegelStudent&next=list.vm&nextdir=qispos/notenspiegel/student&createInfos=Y&struct=auswahlBaum&nodeID=auswahlBaum%7Cabschluss%3Aabschl%3D84%2Cstgnr%3D1&expand=0&asi=" + asi + "#auswahlBaum%7Cabschluss%3Aabschl%3D84%2Cstgnr%3D1", "utf-8"))
+                         .referrer(referer_noten)
+                         .cookies(ck.cookies())
+                         .userAgent(userAgent)
+                         .header("Host", "qispos.hs-fulda.de")
+                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                         .header("Accept-Language", "de,en-US;q=0.7,en;q=0.3")
+                         .header("Accept-Encoding", "*/*")
+                         .header("Connection", "keep-alive")
+                         .header("Upgrade-Insecure-Requests", "1")
+                         .method(Connection.Method.GET)
+                         .execute();
+
+
+                Document d = res.parse();
+
+                System.out.println(d.body().text());
+
             }catch(IOException e){
                 e.printStackTrace();
             }
+
+
 
             return null;
         }

@@ -10,7 +10,7 @@
         android:textSize="13sp"
         android:text="@string/datum"
         android:layout_marginTop="5dp"
-        android:layout_alignStart="@id/grades_pruefung"/>
+         />
 
     <TextView
         android:layout_width="wrap_content"

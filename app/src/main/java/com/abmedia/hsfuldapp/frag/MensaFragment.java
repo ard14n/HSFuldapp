@@ -128,7 +128,12 @@ public class MensaFragment extends Fragment {
             TextView foodPrice =
                     ((ViewHolder)convertView.getTag()).foodPrice;
 
-            foodCategory.setText(currentFood.category);
+
+
+           //TODO Für die Gerichte einer einzelnen Kategorie nur eine Überschrift festlegen
+
+
+
             foodName.setText(currentFood.name);
             foodDescription.setText(currentFood.description);
             foodPhoto.setImageBitmap(currentFood.photo);
@@ -176,7 +181,7 @@ public class MensaFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-        super.onPreExecute();
+            super.onPreExecute();
 
 
         }
@@ -212,7 +217,7 @@ public class MensaFragment extends Fragment {
                     String kategorie = obj2.getString("kategorie");
                     String preis = obj2.getString("preis");
 
-                    System.out.println(preis);
+
 
                     Bitmap photo = getbmpfromURL(bild);
 
