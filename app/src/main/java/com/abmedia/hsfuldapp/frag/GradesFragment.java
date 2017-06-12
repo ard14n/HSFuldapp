@@ -1,23 +1,21 @@
 package com.abmedia.hsfuldapp.frag;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.abmedia.hsfuldapp.Grades;
+import com.abmedia.hsfuldapp.MainActivity;
 import com.abmedia.hsfuldapp.R;
 
 import org.jsoup.Connection;
@@ -25,13 +23,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,8 +47,6 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
     String username;
     String password;
-
-
 
     private OnFragmentInteractionListener mListener;
 
@@ -90,11 +82,6 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
 
         return v;
-
-
-
-
-
 
     }
 
@@ -144,7 +131,7 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
         }
 
-
+        
     }
 
     /**
@@ -160,7 +147,6 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
 
 
     private class LoginGrades extends AsyncTask<String, Void, Void> {
@@ -249,11 +235,11 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
                     title += spalten.text() + "\n";
 
+                    String pruefungsnummer = spalten.get(0).text();
+                    String pruefungsname = spalten.get(1).text();
 
 
                 }
-
-
 
                 System.out.println(d.body().text());
                 System.out.println(cookie);
@@ -276,6 +262,7 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
             Context context = getActivity();
             text =  (TextView) getView().findViewById(R.id.text);
             text.setText(title);
+
 
         }
     }
