@@ -11,8 +11,8 @@ import java.util.Map;
 public class Grade {
 
 
-        public String datum, pruefung, status, versuch, credits, note;
-        public HashMap<String, String> averageGrades;
+    public String datum, pruefung, status, versuch, credits, note;
+    public HashMap<String, String> averageGrades;
 
     public Grade(String datum, String pruefung, String status, String versuch, String credits, String note){
         this.datum = datum;
