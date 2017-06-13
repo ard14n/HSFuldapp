@@ -1,5 +1,6 @@
 package com.abmedia.hsfuldapp.frag;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.abmedia.hsfuldapp.Grade;
 import com.abmedia.hsfuldapp.MainActivity;
 import com.abmedia.hsfuldapp.R;
 
@@ -26,6 +28,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +50,12 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
     String username;
     String password;
+
+    ProgressDialog progressDialog;
+
+    public static ArrayList<Grade> gradeslist;
+
+    GradeListFragment glf;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,6 +88,10 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
         Button btn = (Button) v.findViewById(R.id.button);
         btn.setOnClickListener(this);
+
+        gradeslist = new ArrayList<Grade>();
+        glf  = new GradeListFragment();
+
 
 
         return v;
@@ -131,7 +144,7 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
         }
 
-        
+
     }
 
     /**
@@ -160,6 +173,17 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36";
 
         Map<String, String> cookie;
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setTitle("Anmelden");
+            progressDialog.setMessage("Loading");
+            progressDialog.setIndeterminate(false);
+            progressDialog.show();
+        }
 
         @Override
         protected Void doInBackground(String... params) {
@@ -233,17 +257,22 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
 
                     Elements spalten = eintrag.select("td");
 
-                    title += spalten.text() + "\n";
+                    //title += spalten.text() + "\n";
 
                     String pruefungsnummer = spalten.get(0).text();
                     String pruefungsname = spalten.get(1).text();
+                    String note = spalten.get(2).text();
+                    String status = spalten.get(3).text();
+                    String credits = spalten.get(4).text();
+                    String versuch = spalten.get(5).text();
+                    String datum = spalten.get(6).text();
 
+
+                    gradeslist.add(new Grade(datum, pruefungsname, note, status, credits, versuch));
 
                 }
 
-                System.out.println(d.body().text());
-                System.out.println(cookie);
-                System.out.println(asi);
+
 
             }catch(IOException e){
                 e.printStackTrace();
@@ -254,15 +283,20 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
             return null;
         }
 
-        //Setzt den greeting Text
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
             Context context = getActivity();
             text =  (TextView) getView().findViewById(R.id.text);
-            text.setText(title);
+            text.setText("Hallo");
+            progressDialog.dismiss();
 
+
+            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.flContent, glf);
+            ft.commit();
 
         }
     }

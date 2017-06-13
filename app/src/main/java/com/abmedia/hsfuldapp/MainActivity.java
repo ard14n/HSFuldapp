@@ -13,12 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.abmedia.hsfuldapp.frag.GradeListFragment;
 import com.abmedia.hsfuldapp.frag.GradesFragment;
 import com.abmedia.hsfuldapp.frag.HomeFragment;
 import com.abmedia.hsfuldapp.frag.MensaFragment;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
-        GradesFragment.OnFragmentInteractionListener, MensaFragment.OnFragmentInteractionListener {
+        GradesFragment.OnFragmentInteractionListener, MensaFragment.OnFragmentInteractionListener, GradeListFragment.OnFragmentInteractionListener {
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
@@ -56,8 +57,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         }
 
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+                        
 
         // Set action bar title
         setTitle("Home");
