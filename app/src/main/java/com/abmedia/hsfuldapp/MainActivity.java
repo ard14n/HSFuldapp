@@ -57,7 +57,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         }
 
         // Insert the fragment by replacing any existing fragment
-                        
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
         // Set action bar title
         setTitle("Home");
