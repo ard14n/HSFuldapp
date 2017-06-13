@@ -1,8 +1,6 @@
 package com.abmedia.hsfuldapp;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Dini on 13.06.2017.
