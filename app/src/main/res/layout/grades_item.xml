@@ -43,6 +43,7 @@
         android:layout_toEndOf="@+id/grades_status"
         android:layout_marginStart="10dp" />
 
+    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
