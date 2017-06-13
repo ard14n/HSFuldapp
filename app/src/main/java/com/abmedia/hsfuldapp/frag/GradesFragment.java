@@ -289,8 +289,6 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
             super.onPostExecute(aVoid);
 
             Context context = getActivity();
-            text =  (TextView) getView().findViewById(R.id.text);
-            text.setText("Hallo");
             progressDialog.dismiss();
 
 
