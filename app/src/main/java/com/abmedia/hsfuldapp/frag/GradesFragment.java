@@ -268,7 +268,7 @@ public class GradesFragment extends Fragment implements View.OnClickListener {
                     String datum = spalten.get(6).text();
 
 
-                    gradeslist.add(new Grade(datum, pruefungsname, note, status, credits, versuch));
+                    gradeslist.add(new Grade(datum, pruefungsname, status, versuch, credits, note));
 
                 }
 

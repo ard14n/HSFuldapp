@@ -30,7 +30,7 @@ import java.util.List;
 public class GradeListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    
+
     private static class ViewHolder{
         TextView gradeDatum;
         TextView gradePruef;
