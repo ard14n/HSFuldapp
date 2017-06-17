@@ -1,8 +1,10 @@
 package com.abmedia.hsfuldapp.frag;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -21,6 +23,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
 
 import com.abmedia.hsfuldapp.Grade;
 import com.abmedia.hsfuldapp.R;
@@ -47,6 +50,7 @@ public class GradeListFragment extends Fragment {
         TextView gradeVersuch;
         TextView gradeCredits;
         TextView gradeNote;
+        TextView averageGrades;
     }
 
     private ArrayList<Grade> grades;
@@ -67,6 +71,8 @@ public class GradeListFragment extends Fragment {
             Grade currentFood = grades.get(position);
             if(convertView == null) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.grades_item, null, false);
+
+
             }
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.gradeDatum =
@@ -97,7 +103,7 @@ public class GradeListFragment extends Fragment {
             TextView gradeNote =
                     ((ViewHolder)convertView.getTag()).gradeNote;
 
-            gradeDatum.setText(currentFood.datum);
+            gradeDatum.setText(currentFood.averageGrades);
             gradePruef.setText(currentFood.pruefung);
             gradeStatus.setText(currentFood.status);
             gradeVersuch.setText(currentFood.versuch);
@@ -131,6 +137,8 @@ public class GradeListFragment extends Fragment {
 
         grades = GradesFragment.gradeslist;
         adapter = new MyArrayAdapter(getActivity(), R.layout.grades_item, grades);
+
+
 
 
     }
@@ -252,5 +260,31 @@ public class GradeListFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+
+    private class getAverageGrades extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            Toast.makeText(getContext(),"Hallo", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }

@@ -17,9 +17,10 @@ import com.abmedia.hsfuldapp.frag.GradeListFragment;
 import com.abmedia.hsfuldapp.frag.GradesFragment;
 import com.abmedia.hsfuldapp.frag.HomeFragment;
 import com.abmedia.hsfuldapp.frag.MensaFragment;
+import com.abmedia.hsfuldapp.frag.RaumplanFragment;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
-        GradesFragment.OnFragmentInteractionListener, MensaFragment.OnFragmentInteractionListener, GradeListFragment.OnFragmentInteractionListener {
+        GradesFragment.OnFragmentInteractionListener, MensaFragment.OnFragmentInteractionListener, GradeListFragment.OnFragmentInteractionListener, RaumplanFragment.OnFragmentInteractionListener {
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
@@ -120,8 +121,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
             case R.id.nav_third_fragment:
                 fragmentClass = MensaFragment.class;
                 break;
+            case R.id.nav_fourth_fragment:
+                fragmentClass = RaumplanFragment.class;
+                break;
             default:
                 fragmentClass = HomeFragment.class;
+
         }
 
         try {

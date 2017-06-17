@@ -10,7 +10,7 @@ public class Grade {
 
 
     public String datum, pruefung, status, versuch, credits, note;
-    public HashMap<String, String> averageGrades;
+    public String averageGrades;
 
     public Grade(String datum, String pruefung, String status, String versuch, String credits, String note){
         this.datum = datum;
@@ -22,7 +22,7 @@ public class Grade {
     }
 
 
-    public Grade(String datum, String pruefung, String status, String versuch, String credits, String note, HashMap<String, String> averageGrades){
+    public Grade(String datum, String pruefung, String status, String versuch, String credits, String note, String averageGrades){
         this.datum = datum;
         this.pruefung = pruefung;
         this.status = status;
