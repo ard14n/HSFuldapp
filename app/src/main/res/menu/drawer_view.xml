@@ -27,5 +27,10 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="Sys2Teach"
             android:checkable="true"/>
+        <item
+            android:id="@+id/nav_sixth_fragment"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="CampusNavi"
+            android:checkable="true"/>
     </group>
 </menu>

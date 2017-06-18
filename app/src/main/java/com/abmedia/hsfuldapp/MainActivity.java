@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import com.abmedia.hsfuldapp.frag.GradeListFragment;
 import com.abmedia.hsfuldapp.frag.GradesFragment;
 import com.abmedia.hsfuldapp.frag.HomeFragment;
+import com.abmedia.hsfuldapp.frag.MapViewFragment;
 import com.abmedia.hsfuldapp.frag.MensaFragment;
 import com.abmedia.hsfuldapp.frag.RaumplanFragment;
 
@@ -128,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
                 break;
             case R.id.nav_fifth_fragment:
                 fragmentClass = Sys2TeachFragment.class;
+                break;
+            case R.id.nav_sixth_fragment:
+                fragmentClass = MapViewFragment.class;
                 break;
             default:
                 fragmentClass = HomeFragment.class;
