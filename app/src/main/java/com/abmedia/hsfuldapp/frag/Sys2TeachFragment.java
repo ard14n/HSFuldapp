@@ -2,23 +2,22 @@ package com.abmedia.hsfuldapp.frag;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.abmedia.hsfuldapp.R;
 import com.abmedia.hsfuldapp.helper.RegexHelper;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,6 +25,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 import static org.jsoup.helper.HttpConnection.connect;
@@ -40,17 +41,83 @@ import static org.jsoup.helper.HttpConnection.connect;
  */
 public class Sys2TeachFragment extends Fragment {
 
-    public TextView meldung;
 
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ArrayList<Sys2TeachFragment.News> news_list;
+    private ListView myListView;
+    private MyArrayAdapter adapter;
+
+    private static class News {
+        String category, date, author, title, text;
+
+
+        public News(String category, String title, String date, String author, String text){
+            this.category = category;
+            this.title = title;
+            this.date = date;
+            this.author = author;
+            this.text = text;
+
+        }
+    }
+
+    private static class ViewHolder{
+        TextView newsCategory;
+        TextView newsDate;
+        TextView newsTitle;
+        TextView newsAuthor;
+        TextView newsText;
+    }
+
+    private class MyArrayAdapter extends ArrayAdapter {
+
+        public MyArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            News current_news = news_list.get(position);
+            if(convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.sys2teach_item, null, false);
+            }
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.newsCategory =
+                    (TextView)convertView.findViewById(R.id.news_category);
+            viewHolder.newsTitle =
+                    (TextView)convertView.findViewById(R.id.news_title);
+            viewHolder.newsText =
+                    (TextView)convertView.findViewById(R.id.news_text);
+            viewHolder.newsDate =
+                    (TextView)convertView.findViewById(R.id.news_date);
+            viewHolder.newsAuthor =
+                    (TextView)convertView.findViewById(R.id.news_author);
+
+            convertView.setTag(viewHolder);
+
+            TextView newsCategory =
+                    ((Sys2TeachFragment.ViewHolder)convertView.getTag()).newsCategory;
+            TextView newsTitle =
+                    ((Sys2TeachFragment.ViewHolder)convertView.getTag()).newsTitle;
+            TextView newsText =
+                    ((Sys2TeachFragment.ViewHolder)convertView.getTag()).newsText;
+            TextView newsDate =
+                    ((Sys2TeachFragment.ViewHolder)convertView.getTag()).newsDate;
+            TextView newsAuthor =
+                    ((Sys2TeachFragment.ViewHolder)convertView.getTag()).newsAuthor;
+
+
+            newsCategory.setText(current_news.category);
+            newsDate.setText(current_news.date);
+            newsAuthor.setText(current_news.author);
+            newsTitle.setText(current_news.title);
+            newsText.setText(current_news.text);
+
+            return convertView;
+
+        }
+    }
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,34 +126,20 @@ public class Sys2TeachFragment extends Fragment {
 
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Sys2Teach.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Sys2TeachFragment newInstance(String param1, String param2) {
+    public static Sys2TeachFragment newInstance() {
         Sys2TeachFragment fragment = new Sys2TeachFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
+        myListView = new ListView(getActivity());
 
-
+        news_list = new ArrayList<>();
+        adapter = new MyArrayAdapter(getActivity(), R.layout.sys2teach_item, news_list);
+        new Sys2TeachNews().execute();
 
     }
 
@@ -94,13 +147,12 @@ public class Sys2TeachFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        ViewGroup v = (ViewGroup) inflater.inflate(R.layout.sys2teach_item, container, false);
+        Context c = getActivity();
+        myListView = new ListView(c);
 
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_sys2_teach, container, false);
-
-        meldung = (TextView) v.findViewById(R.id.info_text);
-        new Sys2TeachNews().execute();
-
+        myListView.setAdapter(adapter);
+        v.addView(myListView);
 
         return v;
 
@@ -177,11 +229,13 @@ public class Sys2TeachFragment extends Fragment {
 
             try {
 
+
+                //Funktioniert. Passwort und Benutzername eingeben zum Testen ansonsten crasht App
                 username = "";
                 password = "";
 
                 Connection.Response res = Jsoup.connect(url)
-
+                        .timeout(1000)
                         .followRedirects(true)
                         .userAgent(userAgent)
                         .referrer(referer)
@@ -215,6 +269,7 @@ public class Sys2TeachFragment extends Fragment {
 
 
                 res = Jsoup.connect("https://www.system2teach.de/hfg/protected/j_security_check")
+                        .timeout(1000)
                         .cookie("JSESSIONID", cookie)
                         .followRedirects(true)
                         .header("Connection", "keep-alive")
@@ -223,7 +278,10 @@ public class Sys2TeachFragment extends Fragment {
                         .method(Connection.Method.POST)
                         .execute();
 
+                System.out.println(res.body());
+
                 res = Jsoup.connect("https://www.system2teach.de/hfg/ea/show_all_notices.jsp")
+                        .timeout(1000)
                         .cookie("JSESSIONID", cookie)
                         .followRedirects(true)
                         .method(Connection.Method.POST)
@@ -256,8 +314,6 @@ public class Sys2TeachFragment extends Fragment {
 
                     Elements tds = current_tr.getElementsByTag("td");
 
-
-
                     titel = tds.get(3).text();
                     datum = tds.get(1).text();
                     kategorie = tds.get(2).text();
@@ -269,6 +325,8 @@ public class Sys2TeachFragment extends Fragment {
                     System.out.println("Datum " + datum);
                     System.out.println("Titel " + titel);
                     System.out.println("Autor " + autor);
+
+                    news_list.add(new News(kategorie, titel, datum, autor, ""));
                 }
 
 
@@ -293,7 +351,7 @@ public class Sys2TeachFragment extends Fragment {
 
            progressDialog.dismiss();
 
-            meldung.setText(test);
+            adapter.notifyDataSetChanged();
 
 
         }
