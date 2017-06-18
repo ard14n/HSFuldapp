@@ -22,8 +22,8 @@ import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -148,7 +148,7 @@ public class Sys2TeachFragment extends Fragment {
 
     private class Sys2TeachNews extends AsyncTask<Void, String, String> {
 
-        private String username, password, cookie, test;
+        private String username, password, cookie, test, titel, datum, kategorie, autor;
 
         private String url = "https://www.system2teach.de/hfg/logon.jsp";
         private String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0";
@@ -173,21 +173,19 @@ public class Sys2TeachFragment extends Fragment {
 
         @Override
         protected String doInBackground(Void... arg0) {
+
+
             try {
-                username = "fdai4590";
-                password = "98barcelona643";
+
+                username = "";
+                password = "";
 
                 Connection.Response res = Jsoup.connect(url)
 
                         .followRedirects(true)
-                        .header("Connection", "keep-alive")
-                        .header("Upgrade-Insecure-Requests", "1")
-
                         .userAgent(userAgent)
                         .referrer(referer)
-
-                        .data("ACTION","login", "j_username", username, "j_password", password, "LOGIN", "Anmelden: undefined")
-
+                        .data("ACTION","login", "j_username", username, "j_password", password, "LOGIN", "Anmelden")
                         .method(Connection.Method.POST)
                         .execute();
 
@@ -221,45 +219,63 @@ public class Sys2TeachFragment extends Fragment {
                         .followRedirects(true)
                         .header("Connection", "keep-alive")
                         .header("Upgrade-Insecure-Requests", "1")
-                        .data("j_username", username_encrypted, "j_password", password_encrypted + ": undefined")
+                        .data("j_username", username_encrypted, "j_password", password_encrypted)
+                        .method(Connection.Method.POST)
+                        .execute();
+
+                res = Jsoup.connect("https://www.system2teach.de/hfg/ea/show_all_notices.jsp")
+                        .cookie("JSESSIONID", cookie)
+                        .followRedirects(true)
                         .method(Connection.Method.POST)
                         .execute();
 
 
+                Document doc2 = res.parse();
 
-                Connection.Response ares = Jsoup.connect("https://www.system2teach.de/hfg//protected/bv_setSessionDataObj.jsp")
-                        .cookie("JSESSIONID", cookie)
-                        .method(Connection.Method.GET)
-                        .followRedirects(true)
-                        .header("Connection", "keep-alive")
-                        .header("Upgrade-Insecure-Requests", "1")
+                /*Elements table = doc2.select("table[border=0]");
 
-                        .userAgent(userAgent)
-                        .execute();
+                Elements dls = table.select("dl");
+
+                String kategorie = "";
+
+                for (int i = 0; i < 3; i++) {
+
+                    Element current_dl = dls.get(i);
+
+                    kategorie = current_dl.select("span").get(0).text();
+
+                }*/
+
+                Element table = doc2.select("table[width=100%]").get(1);
+
+                Elements trs = table.getElementsByTag("tr");
+
+                for (int i = 1; i < trs.size(); i++) {
+
+                    Element current_tr = trs.get(i);
+
+                    Elements tds = current_tr.getElementsByTag("td");
 
 
 
-                Connection.Response bres = Jsoup.connect("https://www.system2teach.de/hfg/po/po_overview.jsp")
-                        .cookie("JSESSIONID", cookie)
-                        .followRedirects(true)
-                        .header("Connection", "keep-alive")
-                        .header("Upgrade-Insecure-Requests", "1")
+                    titel = tds.get(3).text();
+                    datum = tds.get(1).text();
+                    kategorie = tds.get(2).text();
+                    autor = tds.get(4).text();
 
-                        .userAgent(userAgent)
-                        .method(Connection.Method.GET)
-                        .execute();
+                    //debugging
+                    System.out.println("------------------------------------------------");
+                    System.out.println("Kategorie " + kategorie);
+                    System.out.println("Datum " + datum);
+                    System.out.println("Titel " + titel);
+                    System.out.println("Autor " + autor);
+                }
 
 
 
-                Document doc2 = bres.parse();
 
-                //debugging
-                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++");
-                System.out.println("BODY " + bres.body());
+                //System.out.println(table.html());
 
-                //debugging
-                System.out.println("------------------------------------------------");
-                System.out.println("COOKIE " + cookie);
 
 
 
