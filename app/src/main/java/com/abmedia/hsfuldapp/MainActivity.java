@@ -20,10 +20,11 @@ import com.abmedia.hsfuldapp.frag.MapViewFragment;
 import com.abmedia.hsfuldapp.frag.MensaFragment;
 import com.abmedia.hsfuldapp.frag.RaumplanFragment;
 
+import com.abmedia.hsfuldapp.frag.SettingsFragment;
 import com.abmedia.hsfuldapp.frag.Sys2TeachFragment;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,
-        GradesFragment.OnFragmentInteractionListener, MensaFragment.OnFragmentInteractionListener, GradeListFragment.OnFragmentInteractionListener, RaumplanFragment.OnFragmentInteractionListener, Sys2TeachFragment.OnFragmentInteractionListener {
+        GradesFragment.OnFragmentInteractionListener, MensaFragment.OnFragmentInteractionListener, GradeListFragment.OnFragmentInteractionListener, RaumplanFragment.OnFragmentInteractionListener, Sys2TeachFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
@@ -132,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
                 break;
             case R.id.nav_sixth_fragment:
                 fragmentClass = MapViewFragment.class;
+                break;
+            case R.id.nav_seventh_fragment:
+                fragmentClass = SettingsFragment.class;
                 break;
             default:
                 fragmentClass = HomeFragment.class;

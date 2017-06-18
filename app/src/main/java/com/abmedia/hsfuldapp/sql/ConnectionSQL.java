@@ -32,4 +32,29 @@ public class ConnectionSQL extends SQLiteOpenHelper {
 
     }
 
+
+    public void createDBMensa(){
+
+    }
+
+    public void addMensa(){
+
+    }
+
+    public void createDBNoten(){
+
+    }
+
+    public void addNoten(){
+
+    }
+
+    public void createDBSys2(){
+
+    }
+
+    public void addNews(){
+
+    }
+
 }

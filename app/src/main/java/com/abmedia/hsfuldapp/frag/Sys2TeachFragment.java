@@ -231,8 +231,8 @@ public class Sys2TeachFragment extends Fragment {
 
 
                 //Funktioniert. Passwort und Benutzername eingeben zum Testen ansonsten crasht App
-                username = "";
-                password = "";
+                username = "fdai4590";
+                password = "98barcelona643";
 
                 Connection.Response res = Jsoup.connect(url)
                         .timeout(1000)

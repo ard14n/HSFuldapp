@@ -32,5 +32,10 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="CampusNavi"
             android:checkable="true"/>
+        <item
+            android:id="@+id/nav_seventh_fragment"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Einstellungen"
+            android:checkable="true"/>
     </group>
 </menu>
