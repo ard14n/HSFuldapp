@@ -41,9 +41,6 @@ import static org.jsoup.helper.HttpConnection.connect;
  */
 public class Sys2TeachFragment extends Fragment {
 
-
-
-
     private ArrayList<Sys2TeachFragment.News> news_list;
     private ListView myListView;
     private MyArrayAdapter adapter;
@@ -229,7 +226,6 @@ public class Sys2TeachFragment extends Fragment {
 
             try {
 
-
                 //Funktioniert. Passwort und Benutzername eingeben zum Testen ansonsten crasht App
                 username = "";
                 password = "";
@@ -242,8 +238,6 @@ public class Sys2TeachFragment extends Fragment {
                         .data("ACTION","login", "j_username", username, "j_password", password, "LOGIN", "Anmelden")
                         .method(Connection.Method.POST)
                         .execute();
-
-
 
                 cookie = res.cookie("JSESSIONID");
 
@@ -290,20 +284,6 @@ public class Sys2TeachFragment extends Fragment {
 
                 Document doc2 = res.parse();
 
-                /*Elements table = doc2.select("table[border=0]");
-
-                Elements dls = table.select("dl");
-
-                String kategorie = "";
-
-                for (int i = 0; i < 3; i++) {
-
-                    Element current_dl = dls.get(i);
-
-                    kategorie = current_dl.select("span").get(0).text();
-
-                }*/
-
                 Element table = doc2.select("table[width=100%]").get(1);
 
                 Elements trs = table.getElementsByTag("tr");
@@ -330,18 +310,11 @@ public class Sys2TeachFragment extends Fragment {
                 }
 
 
-
-
                 //System.out.println(table.html());
-
-
-
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
 
             return null;
         }
@@ -350,7 +323,6 @@ public class Sys2TeachFragment extends Fragment {
         protected void onPostExecute(String result){
 
            progressDialog.dismiss();
-
             adapter.notifyDataSetChanged();
 
 
